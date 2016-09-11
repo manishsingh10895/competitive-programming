@@ -53,7 +53,7 @@ vector<long> GetPrimes(long n)
     for(long i = 3; i <= n; i+= 2) //eliminating all the even numbers 
     {
         bool isPrime = true;
-        
+            
         for(long j = 0; primes[j] * primes[j] <= i; j++)  //similar to using sqrt() as the ending condition, but it takes less time
         {
             if(i % primes[j] == 0)
