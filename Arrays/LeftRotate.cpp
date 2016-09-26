@@ -12,12 +12,45 @@ int GCD(int a, int b)
 }
 
 //Rotate the array by x places
-void LeftRotate(int array[], int x)
+void LeftRotate(int array[], int x, int size)
 {   
-    
-    for(int i = 0; i < GCD(array.size(), x); i++)
+    int j,k;
+    for(int i = 0; i < GCD(size, x); i++)
     {
-        
+        // cout << array[i];
+        int temp  = array[i];
+        j = i;
+        while(true)
+        {
+            k = j + x;
+            if(k >= size) 
+                k = k - size;
+
+            if(k == i) break; // while loop traversed the whole array
+
+            array[j] = array[k]; 
+            j = k;
+        }
+        array[j] = temp;
     }
 }
 
+void Print(int array[], int size)
+{
+    cout << endl;
+    for(int i =0; i< size; i++) {
+        cout << array[i] << " ";
+    }
+
+    cout << endl;
+}
+
+
+int main()
+{
+    cout << "Something\n";
+    int array[] = {1,2,3,4,5,6,7,8,9,10,11,12};
+    LeftRotate(array, 3, 12);
+
+    Print(array, 12);
+}
