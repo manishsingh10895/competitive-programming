@@ -7,7 +7,7 @@
     - Then Elements in each set are shifted to the corresponding place in left set
     - Method 3 on [Left Rotation](http://www.geeksforgeeks.org/array-rotation/)
 
- - # Binary Search in a Rotated Array
+- # Binary Search in a Rotated Array
     **Searching for an element in a sorted and rotated array**
 
     - First find the first position in array where the next element is lower than the previous element (pivot)
