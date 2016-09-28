@@ -17,7 +17,6 @@ void LeftRotate(int array[], int x, int size)
     int j,k;
     for(int i = 0; i < GCD(size, x); i++)
     {
-        // cout << array[i];
         int temp  = array[i];
         j = i;
         while(true)
@@ -48,7 +47,6 @@ void Print(int array[], int size)
 
 int main()
 {
-    cout << "Something\n";
     int array[] = {1,2,3,4,5,6,7,8,9,10,11,12};
     LeftRotate(array, 3, 12);
 
