@@ -17,9 +17,9 @@ void SelectionSort(int array[], int size)
     {
         int min = INFINITY; //making min the largest possible number
         int pos = i;
-        for(int j = i; j < size; j++)
+        for(int j = i + 1; j < size; j++)
         {
-            if(array[j] <= min) 
+            if(array[j] <= min)
             {
                 min = array[j];
                 pos = j;
