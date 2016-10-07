@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <stack>
 #include <string>
 #include <limits>
@@ -27,6 +28,9 @@ class BST {
         void TraverseRight(Node<T>*);
         void Postorder(Node<T> *ptr);
         int Height(Node<T>* from);
+        void LevelOrderTraversalMethod1();
+        void PrintGivenLevel(Node<T>* node, int level);
+        void LevelOrderTraversalMethod2(); //With queue
         Node<T>* FindNode(T data);
         Node<T>* DeleteNode(Node<T>* node, T data);
         bool IsReallyBST(Node<T>* node, int min, int max);
@@ -49,11 +53,47 @@ class BST {
             return IsReallyBST(root, 0, numeric_limits<int>::max());
         }
         void FindPredecessorAndSuccessor(Node<T>* node, Node<T>* &pred, Node<T>* &succ, T data);
+        void LevelOrderTraversal();
         void Print();
         BST() {
             root = NULL;
         }
 };
+
+template <class T>
+void BST<T> :: LevelOrderTraversalMethod1() 
+{
+    // Using Only recursive Function
+    cout << "Not Using Queue\n";
+
+    for(int i = 1; i < FullHeight(); i++) {
+        PrintGivenLevel(root, i);
+        cout << endl;
+    }
+}
+
+template <class T>
+void BST<T> :: PrintGivenLevel(Node<T>* node, int level)
+{
+    if(node == NULL) return;
+
+    if(level == 1)      
+        cout << node->data << " ";
+    else if(level > 1) {
+        PrintGivenLevel(node->left, level-1);
+        PrintGivenLevel(node->right, level -1);
+    }      
+
+}
+
+template <class T>
+void BST<T> :: LevelOrderTraversal()
+{
+    int x = rand() % 1;
+
+    if(x)   return LevelOrderTraversalMethod1();
+    else    return LevelOrderTraversalMethod2();
+}
 
 template <class T>
 void BST<T> :: TraverseLeft(Node<T> *from)
@@ -121,6 +161,35 @@ int BST<T> :: Height(Node<T>* from)
 template <class T>
 Node<T>* BST<T> :: FindKthSmallestElement(int k)
 {
+    Node<T> *ptr = root;
+    stack<Node<T>*> stack;
+
+    // Traverse to the extreme left from root i.e. the smallest node
+    while(ptr != NULL) {
+        stack.push(ptr);
+        ptr = ptr->left;
+    }
+
+    int i = 0;
+    while(!stack.empty()) {
+        ptr = stack.top();
+        stack.pop();
+
+        i++;
+        if(i == k) break;
+
+        if(ptr->right != NULL) {
+            ptr = ptr->right;
+
+            while(ptr != NULL) {
+                stack.push(ptr);
+                ptr = ptr->left;
+            }
+        }
+    }
+
+    cout << ptr->data;
+    return ptr;
 }
 
 template <class T>
@@ -354,6 +423,7 @@ int main()
         cout << "6. Find Lowest Common Ancestor of two nodes\n";
         cout << "7. Find the height of the tree\n";
         cout << "8. Print Top view\n";
+        cout << "9. Find Kth last node in the tree\n";
 
         cout << "\n0. Exit\n";
 
@@ -404,6 +474,12 @@ int main()
                 cout << "Here the top view for you \n";
                 tree.PrintTopViewRecursive(tree.GetRoot());
                 cout << "\n";
+                break;
+            case 9:
+                cout << "Enter the value for k\n";
+                cin >> data;
+                tree.FindKthSmallestElement(data);
+                cout << endl;
                 break;
 
             default: return 0;
