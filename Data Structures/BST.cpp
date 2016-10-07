@@ -1,4 +1,7 @@
 #include <iostream>
+#include <stack>
+#include <string>
+#include <limits>
 using namespace std;
 
 template <class T>
@@ -20,19 +23,153 @@ class BST {
         Node<T> *root;
         void Inorder(Node<T> *ptr);
         void Preorder(Node<T> *ptr);
+        void TraverseLeft(Node<T>*);
+        void TraverseRight(Node<T>*);
         void Postorder(Node<T> *ptr);
+        int Height(Node<T>* from);
         Node<T>* FindNode(T data);
         Node<T>* DeleteNode(Node<T>* node, T data);
+        bool IsReallyBST(Node<T>* node, int min, int max);
     public:
+        Node<T>* GetRoot() {
+            return root;
+        }
         void Insert(T data);
         Node<T>* Min(Node<T> *from);
         Node<T>* Max(Node<T> *from);
         Node<T>* Delete(T data);
+        int FullHeight() {
+            return Height(root);
+        }
+        void PrintTopViewRecursive(Node<T>* node);
+        void PrintTopView();
+        Node<T>* FindKthSmallestElement(int k);
+        Node<T>* FindLCA(Node<T> *node, T, T);
+        bool IsBST() {
+            return IsReallyBST(root, 0, numeric_limits<int>::max());
+        }
+        void FindPredecessorAndSuccessor(Node<T>* node, Node<T>* &pred, Node<T>* &succ, T data);
         void Print();
         BST() {
             root = NULL;
         }
 };
+
+template <class T>
+void BST<T> :: TraverseLeft(Node<T> *from)
+{
+    if(from == NULL) return;
+
+    cout << from->data << " ";
+
+    TraverseLeft(from->left);
+}
+
+template <class T>
+void BST<T> :: TraverseRight(Node<T> *from) {
+    if(from == NULL) return;
+    
+    cout << from->data << " ";
+
+    TraverseRight(from->right);
+}
+
+template <class T>
+void BST<T> :: PrintTopViewRecursive(Node<T> *node)
+{
+    TraverseLeft(node->left);
+
+    cout << node->data << " ";
+
+    TraverseRight(node->right); 
+} 
+
+template <class T>
+void BST<T> :: PrintTopView() 
+{
+    stack<T> stack;
+    Node<T>* ptr = root;
+    while(ptr != NULL) {
+        stack.push(ptr->data);
+        ptr = ptr->left;
+    }
+
+    while(!stack.empty()) {
+        cout << stack.top() << " ";
+        stack.pop();
+    }
+
+    ptr = root->right;
+    while(ptr!=NULL) {
+        cout << ptr->data << " ";
+        ptr = ptr->right;
+    }
+}
+
+template <class T>
+int BST<T> :: Height(Node<T>* from) 
+{
+    if(from == NULL) return 0;
+
+    int leftHeight = Height(from->left);
+    int rightHeight = Height(from->right);
+
+    if(leftHeight > rightHeight) return leftHeight + 1;
+    else return rightHeight + 1;
+}
+
+template <class T>
+Node<T>* BST<T> :: FindKthSmallestElement(int k)
+{
+}
+
+template <class T>
+Node<T>* BST<T> :: FindLCA(Node<T> *node, T data1, T data2) {
+    if (node == NULL) return node;
+
+    if(node->data < data1 && node->data < data2) {
+        return FindLCA(node->right, data1, data2);
+    }
+
+    if(node->data > data1 && node->data > data2) {
+        return FindLCA(node->left, data1, data2);  
+    }
+     
+    // This will be executed only if node is between data1 and data2
+    return node;
+}
+
+template <class T>
+bool BST<T> :: IsReallyBST(Node<T>* node, int min, int max)
+{
+    if(node == NULL) return true;
+
+    // Node's data is out of the specified range then it is not a BST
+    if(node->data < min || node->data > max) return 0;
+
+    return IsReallyBST(node->left, min, node->data - 1) && IsReallyBST(node->right, node->data + 1, max);
+} 
+
+template <class T>
+void BST<T> :: FindPredecessorAndSuccessor(Node<T>* node, Node<T>* &pred, Node<T>* &succ, T data) 
+{
+    if(node == NULL) return;
+
+    if(node->data == data) {
+        if(node->left != NULL) pred = Max(node->left);
+        if(node->right != NULL) succ = Min(node->right);
+
+        return;
+    }
+
+    if(node->data > data) {
+        succ = node;
+        FindPredecessorAndSuccessor(node->left, pred, succ, data);
+    } else {
+        pred = node;
+        FindPredecessorAndSuccessor(node->right, pred, succ, data);
+    }
+}
 
 template <class T>
 Node<T>* BST<T> :: Min(Node<T>* from) {
@@ -116,13 +253,10 @@ void BST<T> :: Insert(T data)
     }
 
     while(curr!=NULL) {
-        if(data > curr->data) {
-            prev = curr;
-            curr = curr->right;
-        } else {
-            prev = curr;
-            curr = curr->left;
-        }
+        prev = curr;
+
+        if(data > curr->data) curr = curr->right;
+        else curr = curr->left;
     }
 
     if(prev->data < data) prev->right = ptr;
@@ -185,7 +319,8 @@ void BST<T> :: Postorder(Node<T> *ptr) {
 
 int main()
 {
-    BST<int> tree; int choice; int data;
+    BST<int> tree; int choice; int data; int secondaryData; 
+    string printStatement;
 
     cout << "Binary Search Tree\n";
 
@@ -214,6 +349,12 @@ int main()
         cout << "1. Insert A Node<T>\n";
         cout << "2. Delete A Node<T>\n";
         cout << "3. Print the tree\n";
+        cout << "4. Find Inorder Predecessor and Successor of a node\n";
+        cout << "5. Check is the current tree is Binary Search Tree\n";
+        cout << "6. Find Lowest Common Ancestor of two nodes\n";
+        cout << "7. Find the height of the tree\n";
+        cout << "8. Print Top view\n";
+
         cout << "\n0. Exit\n";
 
         cout << "Enter your choice\n";
@@ -233,6 +374,36 @@ int main()
             case 3:
                 tree.Print();
                 cout << endl;
+                break;
+            case 4:
+                cout << "Enter the data of the node\n";
+                cin >> data;
+                Node<int> *pred, *succ;
+                tree.FindPredecessorAndSuccessor(tree.GetRoot(), pred, succ, data);
+                cout << "\nInorder Predecessor \t" << pred->data;
+                cout << "\nInorder Successor \t" << succ->data << endl;
+                break;
+            case 5:
+                printStatement = tree.IsBST() ? "Tree is Binary Search Tree" : "Tree is not Binary Search Tree";                
+                cout << printStatement << endl;
+                break;
+            case 6:
+            {
+                cout << "Enter the two datas for finding the LCA separated by space\n";
+                cin >> data >> secondaryData;
+                Node<int> *node = tree.FindLCA(tree.GetRoot(), data, secondaryData);
+
+                if(node == NULL) cout << "No LCA found\n";
+                else cout << "LCA is " << node->data << endl;
+                break;
+            }
+            case 7:
+                cout << "Height of the tree is " << tree.FullHeight() << endl;
+                break;
+            case 8:
+                cout << "Here the top view for you \n";
+                tree.PrintTopViewRecursive(tree.GetRoot());
+                cout << "\n";
                 break;
 
             default: return 0;

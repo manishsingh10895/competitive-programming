@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #define MAX_HEAP_SIZE 1000
 
 using namespace std;
@@ -26,9 +27,9 @@ class Heap
     public:
         void Insert(T element);
         T DeleteElement(T element);
-        Heap(T array)
+        Heap(T array[])
         {
-            heap = array;
+            // heap = array;
             setMaxHeap();
         }
         void Print();
@@ -91,6 +92,8 @@ void Heap<T> :: Print()
 
 int main()
 {
+    int* a;
+    a = new int{1,8,2,7,9,3,10,4,14,16};
     int array[] = {1,8,2,7,9,3,10,4,14,16};
     Heap<int> heap = new Heap<int>(array);
     heap.Print();

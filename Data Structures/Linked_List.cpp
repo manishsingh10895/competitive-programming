@@ -56,7 +56,7 @@ Node<T>* LinkedList<T> :: FindLastNode()
     }
 
     cout << "The last node is \t";
-    cout << ptr->data << "\n";
+    cout << ptr->data << "\n";  
     return ptr;
 }
 
@@ -89,7 +89,7 @@ void LinkedList<T> :: Print()
 
 int main()
 {
-    int choice;
+    int choice, string printStatement;
 
     LinkedList<int> list;
 
