@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <stack>
+#include <queue>
 #include <string>
 #include <limits>
 using namespace std;
@@ -28,6 +29,7 @@ class BST {
         void TraverseRight(Node<T>*);
         void Postorder(Node<T> *ptr);
         int Height(Node<T>* from);
+        bool IsSubtree(Node<T> *subRoot, Node<T>* root);
         void LevelOrderTraversalMethod1();
         void PrintGivenLevel(Node<T>* node, int level);
         void LevelOrderTraversalMethod2(); //With queue
@@ -38,6 +40,7 @@ class BST {
         Node<T>* GetRoot() {
             return root;
         }
+        void UnswapNodes();
         void Insert(T data);
         Node<T>* Min(Node<T> *from);
         Node<T>* Max(Node<T> *from);
@@ -45,6 +48,7 @@ class BST {
         int FullHeight() {
             return Height(root);
         }
+        bool CheckIfSubtree(BST<T> subtree, Node<T> *   );
         void PrintTopViewRecursive(Node<T>* node);
         void PrintTopView();
         Node<T>* FindKthSmallestElement(int k);
@@ -59,6 +63,78 @@ class BST {
             root = NULL;
         }
 };
+
+template <class T>
+bool BST<T> :: IsSubtree(Node<T>* subRoot, Node<T>* root) 
+{
+    if(subRoot == NULL && root == NULL) return true;
+
+    if(subRoot == NULL || root == NULL) return false;
+
+    return ((subRoot->data == root->data) && IsSubtree(subRoot->left, root->left) && IsSubtree(subRoot->right, root->right));
+}
+
+template <class T>
+bool BST<T> :: CheckIfSubtree(BST<T> subtree, Node<T>* root)
+{
+    Node<T>* subRoot = subtree.GetRoot();
+
+    if(subRoot == NULL) return true; //Empty tree is a subtree of any tree
+
+    if(root == NULL) return false; //Nothing is subtree of empty tree
+
+    if(IsSubtree(subRoot, root)) return true;
+
+    return CheckIfSubtree(subtree, root->left) || CheckIfSubtree(subtree, root->right); //Traverse down the original tree
+}
+
+template <class T>
+void BST<T> :: UnswapNodes()
+{
+    Node<T>* ptr = root;
+    stack<Node<T>*> stack;
+
+    while(ptr != NULL)
+    {
+        stack.push(ptr);
+        ptr = ptr->left;
+    }
+
+    while(!stack.empty())
+    {
+        ptr = stack.top();
+        stack.pop();
+
+        if(ptr->right != NULL){
+            ptr = ptr->right;
+
+            while(ptr != NULL) {
+                stack.push(ptr);
+                ptr = ptr->left;
+            }
+        }
+    }
+}
+
+template <class T>
+void BST<T> :: LevelOrderTraversalMethod2() 
+{
+    cout << "Using Queue\n";
+
+    queue<Node<T>*> q;
+
+    q.push(root);
+
+    while(!q.empty())
+    {
+        Node<T>* temp = q.front();
+        q.pop();
+        cout << temp->data << " ";
+
+        if(temp->left != NULL) q.push(temp->left);
+        if(temp->right!= NULL) q.push(temp->right);
+    }
+}
 
 template <class T>
 void BST<T> :: LevelOrderTraversalMethod1() 
@@ -83,7 +159,6 @@ void BST<T> :: PrintGivenLevel(Node<T>* node, int level)
         PrintGivenLevel(node->left, level-1);
         PrintGivenLevel(node->right, level -1);
     }      
-
 }
 
 template <class T>
@@ -424,7 +499,8 @@ int main()
         cout << "7. Find the height of the tree\n";
         cout << "8. Print Top view\n";
         cout << "9. Find Kth last node in the tree\n";
-
+        cout << "10. Level Order Traversal\n";
+        cout << "11. Check if subtree\n";
         cout << "\n0. Exit\n";
 
         cout << "Enter your choice\n";
@@ -481,7 +557,25 @@ int main()
                 tree.FindKthSmallestElement(data);
                 cout << endl;
                 break;
+            case 10:
+                tree.LevelOrderTraversal();
+                cout << "\n";
+                break;
+            case 11:
+            {
+                BST<int> subtree;
+                subtree.Insert(20);
+                subtree.Insert(15);
+                subtree.Insert(13);
+                subtree.Insert(16);
+                subtree.Insert(40);
 
+                cout << tree.CheckIfSubtree(subtree, tree.GetRoot());
+            }
+            case 12: 
+            {
+                BST<int> 
+            }
             default: return 0;
         }
     }
