@@ -1,49 +1,80 @@
 #include <iostream>
 #include <limits>
 
-void Merge(int Left[], int Right[], int Array[], int size)
+using namespace std;
+
+// Merging two arrays into a bigger array
+void Merge(int Array[], int l, int m, int r)
 {
-    int i = 0; int l = 0; int r = 0;
-    while(i < size)
+    int nLeft = m - l + 1;
+    int nRight = r - m;
+
+    int Left[nLeft + 1]; int Right[nRight + 1];
+
+    // Filling the partitioned arrays with relevant values
+    for(int i = 0; i < nLeft; i++) {
+        Left[i] = Array[l + i];
+    }
+    for(int i = 0; i < nRight; i++) {
+        Right[i] = Array[m+i+1];
+    }
+
+    // Ending both arrays with Sentinal element i.e MAX 
+    Left[nLeft] = numeric_limits<int> :: max();
+    Right[nRight] = numeric_limits<int> :: max();
+
+    int j = 0; int k = 0;
+    int i = l;
+    // Loop to fill the bigger array with sorted elements
+    while(j < nLeft && k < nRight)
     {
-        // cout << "Left " << Left[l] << " " << l;
-        // cout << "Right " << Right[r] << " " << r;
-        
-        if(Left[l] < Right[r])
-        {
-            std::cout << "L " << l; 
-            Array[i] = Left[l];
-            l++;
-        }
-        else 
-        {
-            Array[i] = Right[r];
-            r++;
-        }
+        if(Left[j] < Right[k]) {
+            Array[i] = Left[j];
+            j++;
+        } else {
+            Array[i] = Right[k];
+            k++; 
+        } 
+
         i++;
     }
-}
 
-
-void Print(int array[], int size)
-{
-    std::cout << std::endl;
-    for(int i = 0; i < size; i++)
-    {
-        std::cout << array[i] << " ";
+    // If any one of the sub arrays is not traversed completely 
+    // lets do it
+    while(j < nLeft) {
+        Array[i] = Left[j];
+        j++;
+        i++;
     }
-    std::cout << std::endl << std::endl;
-}
 
+    while(k < nRight) {
+        Array[i] = Right[k];
+        k++;
+        i++;
+    }
+} 
+
+void MergeSort(int Array[], int l, int r)
+{
+    if(l < r)
+    {
+        int m = (l + r) / 2;
+
+        MergeSort(Array, l, m);
+        MergeSort(Array, m+1, r);
+
+        Merge(Array, l, m, r);
+    } 
+}
 
 int main()
 {
-    int L[6] = {1,2,3,4,5, std::numeric_limits<int>::max()};
-    int R[6] = {6,7,8,9,10, std::numeric_limits<int>::max()};
+    int a[10] = {1,4,2,6,7,5,10,9,3,8};
 
-    int Array[10] = {1,5,6,7,2,3,10,9,8,4};
+    MergeSort(a, 0,10);
 
-    Merge(L, R, Array, 10);
-
-    Print(Array, 10);
+    for(int i = 0; i < 10;i++) {
+        cout << a[i] << " ";
+    }
+    cout << endl;
 }
