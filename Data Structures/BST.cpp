@@ -572,10 +572,7 @@ int main()
 
                 cout << tree.CheckIfSubtree(subtree, tree.GetRoot());
             }
-            case 12: 
-            {
-                BST<int> 
-            }
+            
             default: return 0;
         }
     }

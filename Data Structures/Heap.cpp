@@ -96,7 +96,7 @@ void MinHeap :: Heapify(int i)
 
     if(l < heapSize && Heap[l] < Heap[i])
         smallest = l;
-    if(r < heapSize && Heap[r] < Heap[i])
+    if(r < heapSize && Heap[r] < Heap[smallest])
         smallest = r;
     
     if(smallest != i) {
@@ -132,9 +132,9 @@ void Swap(int &a, int &b)
 int main()
 {
     MinHeap heap;
-    int choice, data;
+    int choice=1, data;
 
-    while(true) {
+    while(choice!=0) {
         cout << "Choose from the following\n";
         cout << "1. Insert A Key\n";
         cout << "2. Delete A Key\n";
@@ -168,7 +168,7 @@ int main()
                 break;
             }
             case 4:
-                cout << "Minimum Eelement " << heap.ExtractMin() << " Removed\n";
+                cout << "Minimum Element " << heap.ExtractMin() << " Removed\n";
                 break;
             case 5:
                 heap.Print();
