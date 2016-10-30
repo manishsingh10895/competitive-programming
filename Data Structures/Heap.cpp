@@ -168,7 +168,7 @@ int main()
                 break;
             }
             case 4:
-                cout << "Minimum Eelement " << heap.ExtractMin() << " Removed\n";
+                cout << "Minimum Element " << heap.ExtractMin() << " Removed\n";
                 break;
             case 5:
                 heap.Print();
